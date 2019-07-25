@@ -1,0 +1,86 @@
+﻿
+@using Blog.Models;
+@using PagedList;
+@using PagedList.Mvc;
+@model IPagedList<BlogPost>
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
+
+<!-- Page Header -->
+<header class="masthead" style="background-image: url('/img/HeilRanch.JPG')">
+    <div class="overlay"></div>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-md-10 mx-auto">
+                <div class="site-heading">
+                    <h1>ADMIN VIEW</h1>
+                    <span class="subheading">Dave's Of The Week</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Main Content -->
+<div class="container">
+    <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+            @Html.ActionLink("Create New", "Create", "BlogPosts", null, new { @class = "btn btn-default" })
+            @*@Html.ActionLink("Published", "AdminIndex", "BlogPosts", null, new { @class = "btn btn-default" })*@
+            @*@Html.ActionLink("All Posts", "Unpublished", "BlogPosts", null, new { @class = "btn btn-default" })*@
+            @*@Html.ActionLink("Moderator List", "Moderators", "BlogPosts", null, new { @class = "btn btn-default" })*@
+            <hr />
+                @using (Html.BeginForm("Index", "BlogPosts", FormMethod.Get, htmlAttributes: new { @class = "form" }))
+                {
+                    <div class="controls controls-row search-row">
+                        <input id="searchStr" name="searchStr" class="input-block-level" type="text" placeholder="Search" />
+                        <button class="btn btn-primary" type="submit">
+                            <i class="icon-search">Search</i>
+                        </button>
+                    </div>
+                }
+                    
+            <hr />
+            @foreach (var post in Model)
+            {
+                <div class="post-preview">
+                    <a href="@Url.Action("Details", "BlogPosts", new { slug = post.Slug })">
+                        <div class="row">
+                            <div class="col-md-3">
+                                @if (post.MediaUrl != null)
+                                {
+                                    <img class="img-thumbnail" src="@post.MediaUrl" />
+                                }
+                            </div>
+                            <div>
+                                <h2 class="post-title">
+                                    @post.Title
+                                </h2>
+                                <h4 class="post-subtitle">
+                                    @post.Abstract
+                                </h4>
+                                <p class="post-meta">
+                                    Posted by David Etzel on @post.Created.ToString("MMMM d, yyyy")
+                                </p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            }
+
+            <!-- Pager -->
+            <div class="clearfix">
+                <br />
+                <br />
+                @*<h5 class="float-right">
+                    Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+                    @Html.PagedListPager(Model, page => Url.Action("Unpublished", new { page }))
+                </h5>*@
+                <h5 class="float-right">
+                    Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+                    @Html.PagedListPager(Model, page => Url.Action("AdminIndex", new { page, searchStr = ViewBag.Search }))
+                </h5>
+                @*<a class="btn btn-primary float-right" href="#">Older Posts &rarr;</a>*@
+            </div>
+        </div>
+    </div>
+</div>
