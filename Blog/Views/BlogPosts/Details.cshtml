@@ -17,9 +17,12 @@
                     <div class="post-heading">
                         <h1>@Model.Title</h1>
                         <h2 class="subheading">@Model.Abstract</h2>
-                        <span class="meta">
-                            Posted by <a href="http://davidetzelportfolio.azurewebsites.net" target="_blank">David Etzel</a> on @Model.Created.ToString("MMMM d, yyyy")
-                        </span>
+                        @if (Model.Published)
+                        {
+                            <span class="meta">
+                                Posted by <a href="http://davidetzelportfolio.azurewebsites.net" target="_blank">David Etzel</a> on @Model.Created.ToString("MMMM d, yyyy")
+                            </span>
+                        }
                     </div>
                 </div>
             </div>
@@ -37,11 +40,20 @@
                             <img class="img-fluid" src="@Model.MediaUrl" />
                         }
                     <div class="form-group">
-                        @if (User.IsInRole("Admin"))
+                        @if (User.IsInRole("Admin") && !Model.Published)
                         {
                             @Html.ActionLink("Edit", "Edit", new { id = Model.Id }, new { @class = "btn btn-default" })
+                            @Html.ActionLink("Back to List", "Unpublished", null, new { @class = "btn btn-default" })
                         }
-                        @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-default" })
+                        else if (User.IsInRole("Admin"))
+                        {
+                            @Html.ActionLink("Edit", "Edit", new { id = Model.Id }, new { @class = "btn btn-default" })
+                            @Html.ActionLink("Back to List", "AdminIndex", null, new { @class = "btn btn-default" })
+                        }
+                        else
+                        {
+                            @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-default" })
+                        }
                     </div>
                     </div>
                 </div>

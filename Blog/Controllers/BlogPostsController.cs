@@ -23,11 +23,7 @@ namespace Blog.Controllers
 
         //[Authorize]
         //[Authorize(Roles = "Admin, Moderator")]
-        //public ActionResult AdminIndex()
-        //{
-        //    return View("Index", db.BlogPosts.OrderByDescending(b => b.Created).ToList());
-        //}
-
+        
         // GET: BlogPosts
         [AllowAnonymous]
         public ActionResult Index(int? page, string searchStr)
@@ -43,28 +39,29 @@ namespace Blog.Controllers
             //Or...
             //return View("Index", db.BlogPosts.OrderByDescending(b => b.Created).ToList());
 
-            return View(blogList.ToPagedList(pageNumber, pageSize));
+            return View(blogList.Where(b => b.Published).ToPagedList(pageNumber, pageSize));
         }
 
         public ActionResult AdminIndex(int? page, string searchStr)
         {
             ViewBag.Search = searchStr;
-            var blogList = IndexSearch(searchStr);
+            var adminList = IndexSearch(searchStr);
 
             int pageSize = 3;
             int pageNumber = page ?? 1;
 
-            return View("AdminIndex", blogList.ToPagedList(pageNumber, pageSize));
+            return View(adminList.Where(b => b.Published).OrderByDescending(b => b.Created).ToPagedList(pageNumber, pageSize));
         }
+        public ActionResult Unpublished(int? page, string searchStr)
+        {
+            ViewBag.Search = searchStr;
+            var unList = IndexSearch(searchStr);
 
-        //public ActionResult Unpublished(int? page)
-        //{
-        //    int pageSizeUP = 3;
-        //    int pageNumberUP = page ?? 1;
+            int pageSize = 3;
+            int pageNumber = page ?? 1;
 
-        //    //var unPublishedBlogPosts = db.BlogPosts.Where(b => b.Published).OrderByDescending(b => b.Created).ToList();
-        //    return View("Index", db.BlogPosts.OrderByDescending(b => b.Created).ToPagedList(pageNumberUP, pageSizeUP));
-        //}
+            return View("AdminIndex", unList.Where(b => !b.Published).OrderByDescending(b => b.Created).ToPagedList(pageNumber, pageSize));
+        }
 
         public IQueryable<BlogPost> IndexSearch(string searchStr)
         {
@@ -146,8 +143,11 @@ namespace Blog.Controllers
                     blogPost.MediaUrl = "/Uploads/" + fileName;
                 }
 
+                if (blogPost.Published == true)
+                {
+                    blogPost.Created = DateTimeOffset.Now;
+                }
                 blogPost.Slug = slug;
-                blogPost.Created = DateTimeOffset.Now;
                 db.BlogPosts.Add(blogPost);
                 db.SaveChanges();
                 return RedirectToAction("Details", new { slug = blogPost.Slug }) ;
@@ -211,15 +211,16 @@ namespace Blog.Controllers
                 }
                 #endregion
 
+                if (blogPost.Published)
+                {
+                blogPost.Created = DateTimeOffset.Now;
+                }
+
                 blogPost.Slug = newSlug;
                 blogPost.Updated = DateTimeOffset.Now;
                 db.Entry(blogPost).State = EntityState.Modified;
                 db.SaveChanges();
 
-                if(blogPost.Published == false)
-                {
-                    return RedirectToAction("Index");
-                }
                 return RedirectToAction("Details", new { slug = blogPost.Slug });
             }
             return View(blogPost);
@@ -246,16 +247,25 @@ namespace Blog.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             BlogPost blogPost = db.BlogPosts.Find(id);
-            if (blogPost.MediaUrl != null)
-            {
+            //if (blogPost.MediaUrl != null)
+            //{
                 //Something to do with the following syntax to grab the file path and delete
                 //var fileName = Path.GetFileName(image.FileName);
                 //image.SaveAs(Path.Combine(Server.MapPath("~/Uploads/"), fileName));
                 //blogPost.MediaUrl = "/Uploads/" + fileName;
-            }
+            //}
+            if (blogPost.Published)
+            {
             db.BlogPosts.Remove(blogPost);
             db.SaveChanges();
-            return RedirectToAction("Index");
+            return RedirectToAction("AdminIndex");
+            }
+            else
+            {
+            db.BlogPosts.Remove(blogPost);
+            db.SaveChanges();
+            return RedirectToAction("Unpublished");
+            }
         }
 
         protected override void Dispose(bool disposing)

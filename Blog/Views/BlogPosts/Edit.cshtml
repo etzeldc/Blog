@@ -2,7 +2,14 @@
 @model BlogPost
 
 <!-- Page Header -->
-<header class="masthead" style="background-image: url('@Model.MediaUrl')">
+@{
+    var backGroundImage = "/img/HeilRanch.JPG";
+    if (Model.MediaUrl != null)
+    {
+        backGroundImage = Model.MediaUrl;
+    }
+}
+<header class="masthead" style="background-image: url('@backGroundImage')">
     <div class="overlay"></div>
     <div class="container">
         <div class="row">
@@ -85,10 +92,17 @@
                             <input type="submit" value="Save" class="btn btn-default" />
                             @*@Html.ActionLink("Cancel", "Cancel", null, new { @class = "btn btn-default" })*@
                             @Html.ActionLink("Delete", "Delete", "BlogPosts", new { Id = Model.Id }, new { @class = "btn btn-default" })
-                            @Html.ActionLink("Back to List", "Index", new { @class = "btn btn-default" })
+                            @if (Model.Published)
+                            {
+                                @Html.ActionLink("Back to List", "AdminIndex", new { @class = "btn btn-default" })
+                            }
+                            else
+                            {
+                                @Html.ActionLink("Back to List", "Unpublished", new { @class = "btn btn-default" })
+                            }
                         </div>
                     </div>
-                 </div>
+                </div>
             </div>
         </div>
     </div>

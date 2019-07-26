@@ -25,12 +25,12 @@
         <div class="col-lg-8 col-md-10 mx-auto">
             @using (Html.BeginForm("Index", "BlogPosts", FormMethod.Get, htmlAttributes: new { @class = "form" }))
             {
-                <div class="controls controls-row search-row">
-                    <input id="searchStr" name="searchStr" class="input-block-level" type="text" placeholder="Search" />
-                    <button class="btn btn-primary" type="submit">
-                        <i class="icon-search">Search</i>
-                    </button>
-                </div>
+            <div class="controls controls-row search-row">
+                <input id="searchStr" name="searchStr" class="input-block-level col-md-10" type="text" placeholder="Search" />
+                <button class="btn btn-primary rounded" type="submit">
+                    <i class="icon-search">Search</i>
+                </button>
+            </div>
             }
             <hr />
             @foreach (var post in Model)

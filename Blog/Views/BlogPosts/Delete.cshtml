@@ -2,7 +2,14 @@
 @model BlogPost
 
 <!-- Page Header -->
-<header class="masthead" style="background-image: url('@Model.MediaUrl')">
+@{
+    var backGroundImage = "/img/HeilRanch.JPG";
+    if (Model.MediaUrl != null)
+    {
+        backGroundImage = Model.MediaUrl;
+    }
+}
+<header class="masthead" style="background-image: url('@backGroundImage')">
     <div class="overlay"></div>
     <div class="container">
         <div class="row">
