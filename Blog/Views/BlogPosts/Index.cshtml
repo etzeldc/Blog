@@ -41,7 +41,11 @@
                             <div class="col-md-3">
                                 @if (post.MediaUrl != null)
                                 {
-                                    <img class="img-thumbnail" src="@post.MediaUrl" />
+                                    <img class="img-thumbnail" style="border-radius: 25%" src="@post.MediaUrl" />
+                                }
+                                else
+                                {
+                                    <img class="img-thumbnail" style="border-radius: 25%" src="/img/HeilRanch.JPG" />
                                 }
                             </div>
                             <div>

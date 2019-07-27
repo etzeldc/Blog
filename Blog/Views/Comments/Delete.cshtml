@@ -1,72 +1,95 @@
 ﻿@model Blog.Models.Comment
 
+<!-- Page Header -->
 @{
-    ViewBag.Title = "Delete";
-}
-
-<h2>Delete</h2>
-
-<h3>Are you sure you want to delete this?</h3>
-<div>
-    <h4>Comment</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Author.FirstName)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Author.FirstName)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.BlogPost.Title)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.BlogPost.Title)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Body)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Body)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Created)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Created)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Updated)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Updated)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.UpdateReason)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.UpdateReason)
-        </dd>
-
-    </dl>
-
-    @using (Html.BeginForm()) {
-        @Html.AntiForgeryToken()
-
-        <div class="form-actions no-color">
-            <input type="submit" value="Delete" class="btn btn-default" /> |
-            @Html.ActionLink("Back to List", "Index")
-        </div>
+    var backGroundImage = "/img/HeilRanch.JPG";
+    if (Model.BlogPost.MediaUrl != null)
+    {
+        backGroundImage = Model.BlogPost.MediaUrl;
     }
-</div>
+}
+<header class="masthead" style="background-image: url('@backGroundImage')">
+    <div class="overlay"></div>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-md-10 mx-auto">
+                <div class="post-heading">
+                    <h1>@Model.BlogPost.Title</h1>
+                    <h2 class="subheading">@Model.BlogPost.Abstract</h2>
+                    @if (Model.BlogPost.Published)
+                    {
+                        <span class="meta">
+                            Posted by <a href="http://davidetzelportfolio.azurewebsites.net" target="_blank">David Etzel</a> on @Model.Created.ToString("MMMM d, yyyy")
+                        </span>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<article>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-md-10 mx-auto">
+                <div>
+                    <h4>Delete Comment</h4>
+                    <h6>Are you sure you want to delete this?</h6>
+                    <hr />
+                    <dl class="dl-horizontal">
+                        <dt>
+                            @Html.DisplayNameFor(model => model.Author.Email)
+                        </dt>
+
+                        <dd>
+                            @Html.DisplayFor(model => model.Author.Email)
+                        </dd>
+
+                        <dt>
+                            @Html.DisplayNameFor(model => model.Body)
+                        </dt>
+
+                        <dd>
+                            @Html.DisplayFor(model => model.Body)
+                        </dd>
+
+                        <dt>
+                            @Html.DisplayNameFor(model => model.Created)
+                        </dt>
+
+                        <dd>
+                            @Html.DisplayFor(model => model.Created)
+                        </dd>
+
+                        <dt>
+                            @Html.DisplayNameFor(model => model.Updated)
+                        </dt>
+
+                        <dd>
+                            @Html.DisplayFor(model => model.Updated)
+                        </dd>
+
+                        <dt>
+                            @Html.DisplayNameFor(model => model.UpdateReason)
+                        </dt>
+
+                        <dd>
+                            @Html.DisplayFor(model => model.UpdateReason)
+                        </dd>
+
+                    </dl>
+
+                    @using (Html.BeginForm())
+                    {
+                        @Html.AntiForgeryToken()
+
+                        <div class="form-actions no-color">
+                            <input type="submit" value="Delete" class="btn btn-default" />
+                            @Html.ActionLink("Back to Post", "Details", "BlogPosts", new { slug = Model.BlogPost.Slug }, new { @class = "btn btn-default" })
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</article>

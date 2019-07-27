@@ -9,55 +9,90 @@
         backGroundImage = Model.MediaUrl;
     }
 }
-    <header class="masthead" style="background-image: url('@backGroundImage')">
-        <div class="overlay"></div>
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-8 col-md-10 mx-auto">
-                    <div class="post-heading">
-                        <h1>@Model.Title</h1>
-                        <h2 class="subheading">@Model.Abstract</h2>
-                        @if (Model.Published)
-                        {
-                            <span class="meta">
-                                Posted by <a href="http://davidetzelportfolio.azurewebsites.net" target="_blank">David Etzel</a> on @Model.Created.ToString("MMMM d, yyyy")
-                            </span>
-                        }
-                    </div>
+<header class="masthead" style="background-image: url('@backGroundImage')">
+    <div class="overlay"></div>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-md-10 mx-auto">
+                <div class="post-heading">
+                    <h1>@Model.Title</h1>
+                    <h2 class="subheading">@Model.Abstract</h2>
+                    @if (Model.Published)
+                    {
+                        <span class="meta">
+                            Posted by <a href="http://davidetzelportfolio.azurewebsites.net" target="_blank">David Etzel</a> on @Model.Created.ToString("MMMM d, yyyy")
+                        </span>
+                    }
                 </div>
             </div>
         </div>
-    </header>
+    </div>
+</header>
 
-        <!-- Post Content -->
-        <article>
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-8 col-md-10 mx-auto">
-                        @Html.Raw(Model.Body)
-                        @if (Model.MediaUrl != null)
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-md-10 mx-auto">
+                @Html.Raw(Model.Body)
+                @if (Model.MediaUrl != null)
+                {
+                    <img class="img-fluid" src="@Model.MediaUrl" />
+                }
+                <hr />
+                <br />
+                <h1>Comments</h1>
+                <hr />
+                @foreach (var comment in Model.Comments)
+                {
+            <div class="post-preview row">
+                <div class="col-12">
+                    @comment.Body
+                </div>
+                <div class="post-meta col-12">
+                    By @comment.Author.Email on @comment.Created.ToString("M/d/yy")
+                </div>
+                @if (User.IsInRole("Admin") || User.IsInRole("Moderator"))
+                {
+                    @Html.ActionLink("Edit", "Edit", "Comments", new { Id = comment.Id }, new { @class = "btn btn-default"})
+                    @Html.ActionLink("Delete", "Delete", "Comments", new { Id = comment.Id }, new { @class = "btn btn-default" })
+                }
+            </div>
+                <hr />
+                }
+                <div class="form-group">
+                    @if(User.Identity.IsAuthenticated)
                         {
-                            <img class="img-fluid" src="@Model.MediaUrl" />
+                            using (Html.BeginForm("Create", "Comments", FormMethod.Post))
+                            {
+                                @Html.AntiForgeryToken()
+                                @Html.HiddenFor(model => model.Slug)
+                                @Html.Hidden("BlogPostId", Model.Id)
+                                            @*@Html.TextArea()*@
+                                <textarea class="container-fluid" name="CommentBody" placeholder="Add Comment..."></textarea>
+                                <button class="btn btn-default" type="submit">Comment</button>
+                            }
                         }
-                    <div class="form-group">
-                        @if (User.IsInRole("Admin") && !Model.Published)
-                        {
-                            @Html.ActionLink("Edit", "Edit", new { id = Model.Id }, new { @class = "btn btn-default" })
-                            @Html.ActionLink("Back to List", "Unpublished", null, new { @class = "btn btn-default" })
-                        }
-                        else if (User.IsInRole("Admin"))
-                        {
-                            @Html.ActionLink("Edit", "Edit", new { id = Model.Id }, new { @class = "btn btn-default" })
-                            @Html.ActionLink("Back to List", "AdminIndex", null, new { @class = "btn btn-default" })
-                        }
-                        else
-                        {
-                            @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-default" })
-                        }
-                    </div>
-                    </div>
+                    
+                </div>
+                <hr />
+                <div class="form-group">
+                    @if (User.IsInRole("Admin") && !Model.Published)
+                    {
+                        @Html.ActionLink("Edit", "Edit", new { id = Model.Id }, new { @class = "btn btn-default" })
+                        @Html.ActionLink("Back to List", "Unpublished", null, new { @class = "btn btn-default" })
+                    }
+                    else if (User.IsInRole("Admin"))
+                    {
+                        @Html.ActionLink("Edit", "Edit", new { id = Model.Id }, new { @class = "btn btn-default" })
+                        @Html.ActionLink("Back to List", "AdminIndex", null, new { @class = "btn btn-default" })
+                    }
+                    else
+                    {
+                        @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-default" })
+                    }
                 </div>
             </div>
-        </article>
-
-     
+        </div>
+    </div>
+</article>
