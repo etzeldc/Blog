@@ -89,10 +89,6 @@ namespace Blog.Controllers
                     {
                         return RedirectToAction("AdminIndex", "BlogPosts");
                     }
-                    else if (UserManager.IsInRole(userId, "Moderator"))
-                    {
-                        return RedirectToAction("ModeratorIndex", "BlogPosts");
-                    }
                     else
                     {
                         return RedirectToLocal(returnUrl);
@@ -178,7 +174,7 @@ namespace Blog.Controllers
                     // Send an email with this link
                     string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
                     var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
-                    //await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
+                    await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
                     var emailFrom = WebConfigurationManager.AppSettings["emailfrom"];
                     var email = new MailMessage(emailFrom, model.Email)
                     {

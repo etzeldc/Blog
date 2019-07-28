@@ -1,4 +1,6 @@
 ﻿@using Blog.Models
+@using Microsoft.AspNet.Identity
+
 @model BlogPost
 
 <!-- Page Header -->
@@ -45,35 +47,35 @@
                 <hr />
                 @foreach (var comment in Model.Comments)
                 {
-            <div class="post-preview row">
-                <div class="col-12">
-                    @comment.Body
-                </div>
-                <div class="post-meta col-12">
-                    By @comment.Author.Email on @comment.Created.ToString("M/d/yy")
-                </div>
-                @if (User.IsInRole("Admin") || User.IsInRole("Moderator"))
-                {
-                    @Html.ActionLink("Edit", "Edit", "Comments", new { Id = comment.Id }, new { @class = "btn btn-default"})
-                    @Html.ActionLink("Delete", "Delete", "Comments", new { Id = comment.Id }, new { @class = "btn btn-default" })
-                }
-            </div>
-                <hr />
+                    <div class="post-preview row">
+                        <div class="col-12">
+                            @comment.Body
+                        </div>
+                        <div class="post-meta col-12">
+                            By @comment.Author.Email on @comment.Created.ToString("M/d/yy")
+                        </div>
+                        <!--Must determine the proper call for the UserId (== comment.AuthorId)-->
+                        @if (User.IsInRole("Admin") || User.IsInRole("Moderator") || User.Identity.GetUserId() == comment.AuthorId)
+                        {
+                            @Html.ActionLink("Edit", "Edit", "Comments", new { Id = comment.Id }, new { @class = "btn btn-default" })
+                            @Html.ActionLink("Delete", "Delete", "Comments", new { Id = comment.Id }, new { @class = "btn btn-default" })
+                        }
+                    </div>
+                    <hr />
                 }
                 <div class="form-group">
-                    @if(User.Identity.IsAuthenticated)
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        using (Html.BeginForm("Create", "Comments", FormMethod.Post))
                         {
-                            using (Html.BeginForm("Create", "Comments", FormMethod.Post))
-                            {
-                                @Html.AntiForgeryToken()
-                                @Html.HiddenFor(model => model.Slug)
-                                @Html.Hidden("BlogPostId", Model.Id)
-                                            @*@Html.TextArea()*@
-                                <textarea class="container-fluid" name="CommentBody" placeholder="Add Comment..."></textarea>
-                                <button class="btn btn-default" type="submit">Comment</button>
-                            }
+                            @Html.AntiForgeryToken()
+                            @Html.HiddenFor(model => model.Slug)
+                            @Html.Hidden("BlogPostId", Model.Id)
+                            <textarea class="container-fluid" name="CommentBody" placeholder="Add Comment..."></textarea>
+                            <button class="btn btn-default" type="submit">Comment</button>
                         }
-                    
+                    }
+
                 </div>
                 <hr />
                 <div class="form-group">

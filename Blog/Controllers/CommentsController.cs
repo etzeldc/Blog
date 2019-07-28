@@ -43,6 +43,8 @@ namespace Blog.Controllers
 
         // GET: Comments/Create
         //Allow logged in users to comment here
+        [AllowAnonymous]
+
         public ActionResult Create()
         {
             ViewBag.AuthorId = new SelectList(db.Users, "Id", "FirstName");
@@ -55,6 +57,8 @@ namespace Blog.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [AllowAnonymous]
+
         public ActionResult Create([Bind(Include = "BlogPostId")] Comment comment, string commentBody, string slug)
         {
             if (ModelState.IsValid)
@@ -75,6 +79,7 @@ namespace Blog.Controllers
 
         // GET: Comments/Edit/5
         //Allow commenting user to edit their own comment
+        [AllowAnonymous]
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -96,6 +101,8 @@ namespace Blog.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [AllowAnonymous]
+
         public ActionResult Edit([Bind(Include = "Id,BlogPostId,AuthorId,Body,Created,Updated,UpdateReason")] Comment comment)
         {
             if (ModelState.IsValid)
@@ -103,6 +110,7 @@ namespace Blog.Controllers
                 comment.Updated = DateTimeOffset.Now;
                 db.Entry(comment).State = EntityState.Modified;
                 db.SaveChanges();
+                //Must determine correct syntax to redirect back to the comment's details page (should be same as POST delete below)
                 return RedirectToAction("Details", "BlogPosts", new { slug = comment.BlogPost.Slug });
             }
             ViewBag.AuthorId = new SelectList(db.Users, "Id", "FirstName", comment.AuthorId);
@@ -112,6 +120,8 @@ namespace Blog.Controllers
 
         // GET: Comments/Delete/5
         //Allow commenting user to delete their own comment
+        [AllowAnonymous]
+
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -129,6 +139,8 @@ namespace Blog.Controllers
         // POST: Comments/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [AllowAnonymous]
+
         public ActionResult DeleteConfirmed(int id)
         {
             Comment comment = db.Comments.Find(id);
@@ -136,7 +148,6 @@ namespace Blog.Controllers
             db.Comments.Remove(comment);
             db.SaveChanges();
             return RedirectToAction("Details", "BlogPosts", new { slug = slug });
-
         }
 
         protected override void Dispose(bool disposing)
