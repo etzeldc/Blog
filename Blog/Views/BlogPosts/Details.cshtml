@@ -52,7 +52,7 @@
                             @comment.Body
                         </div>
                         <div class="post-meta col-12">
-                            By @comment.Author.Email on @comment.Created.ToString("M/d/yy")
+                            By @if (comment.Author.DisplayName == null) {@comment.Author.Email} @comment.Author.DisplayName on @comment.Created.ToString("M/d/yy")
                         </div>
                         <!--Must determine the proper call for the UserId (== comment.AuthorId)-->
                         @if (User.IsInRole("Admin") || User.IsInRole("Moderator") || User.Identity.GetUserId() == comment.AuthorId)

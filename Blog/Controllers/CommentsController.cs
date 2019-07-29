@@ -105,6 +105,12 @@ namespace Blog.Controllers
 
         public ActionResult Edit([Bind(Include = "Id,BlogPostId,AuthorId,Body,Created,Updated,UpdateReason")] Comment comment, string slug)
         {
+            if (string.IsNullOrEmpty(comment.UpdateReason))
+            {
+                ModelState.AddModelError("UpdateReason", "You must provide an update reason.");
+                comment.BlogPost = db.BlogPosts.AsNoTracking().FirstOrDefault(b => b.Id == comment.BlogPostId);
+                return View(comment);
+            }
             if (ModelState.IsValid)
             {
                 comment.Updated = DateTimeOffset.Now;
