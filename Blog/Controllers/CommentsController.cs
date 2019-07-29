@@ -103,15 +103,14 @@ namespace Blog.Controllers
         [ValidateAntiForgeryToken]
         [AllowAnonymous]
 
-        public ActionResult Edit([Bind(Include = "Id,BlogPostId,AuthorId,Body,Created,Updated,UpdateReason")] Comment comment)
+        public ActionResult Edit([Bind(Include = "Id,BlogPostId,AuthorId,Body,Created,Updated,UpdateReason")] Comment comment, string slug)
         {
             if (ModelState.IsValid)
             {
                 comment.Updated = DateTimeOffset.Now;
                 db.Entry(comment).State = EntityState.Modified;
                 db.SaveChanges();
-                //Must determine correct syntax to redirect back to the comment's details page (should be same as POST delete below)
-                return RedirectToAction("Details", "BlogPosts", new { slug = comment.BlogPost.Slug });
+                return RedirectToAction("Details", "BlogPosts", new { slug = slug });
             }
             ViewBag.AuthorId = new SelectList(db.Users, "Id", "FirstName", comment.AuthorId);
             ViewBag.BlogPostId = new SelectList(db.BlogPosts, "Id", "Title", comment.BlogPostId);
