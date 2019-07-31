@@ -7,19 +7,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
-
     <title>David Etzel's Blog</title>
 
     <!-- Bootstrap core CSS -->
     <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
 
-    <!-- Custom fonts for this template -->
     <link href="~/Content/all.min.css" rel="stylesheet" type="text/css" />
     <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
 
     <!-- Custom styles for this template -->
     <link href="~/Content/clean-blog.min.css" rel="stylesheet" />
+    <link href="~/favicon-16x16.png" rel="shortcut icon" />
 </head>
 
 <body>
@@ -34,7 +33,6 @@
             <div class="collapse navbar-collapse" id="navbarResponsive">
                 <ul class="navbar-nav ml-auto">
                     <li class="nav-item">
-                        @*<a class="nav-link" href="index.html">Home</a>*@
                         @if (User.IsInRole("Admin"))
                         {
                             @Html.ActionLink("Home", "AdminIndex", "BlogPosts", null, new { @class = "nav-link" })
@@ -46,7 +44,6 @@
                         }
                     </li>
                     <li class="nav-item">
-                        @*<a class="nav-link" href="about.html">About</a>*@
                         @Html.ActionLink("About", "About", "Home", null, new { @class = "nav-link" })
 
                     </li>
@@ -108,7 +105,7 @@
                                 </a>
                             </li>
                         </ul>
-                        <p class="copyright text-muted">Copyright &copy; Your Website 2019</p>
+                        <p class="copyright text-muted">Copyright &copy; Dave's Of The Week 2019</p>
                     </div>
                 </div>
             </div>

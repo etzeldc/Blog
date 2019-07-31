@@ -90,7 +90,6 @@
                         @*@Html.ActionLink("Comment"...)*@
                         <div class="btn btn-default">
                             <input type="submit" value="Save" class="btn btn-default" />
-                            @*@Html.ActionLink("Cancel", "Cancel", null, new { @class = "btn btn-default" })*@
                             @Html.ActionLink("Delete", "Delete", "BlogPosts", new { Id = Model.Id }, new { @class = "btn btn-default" })
                             @if (Model.Published)
                             {
@@ -98,7 +97,7 @@
                             }
                             else
                             {
-                                @Html.ActionLink("Back to List", "Unpublished", new { @class = "btn btn-default" })
+                                @Html.ActionLink("Back to List", "Unpublished", null, new { @class = "btn btn-default" })
                             }
                         </div>
                     </div>

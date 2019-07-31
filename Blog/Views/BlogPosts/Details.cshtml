@@ -63,20 +63,20 @@
                     </div>
                     <hr />
                 }
-                <div class="form-group">
-                    @if (User.Identity.IsAuthenticated)
+            <div class="form-group">
+                @if (User.Identity.IsAuthenticated)
+                {
+                    using (Html.BeginForm("Create", "Comments", FormMethod.Post))
                     {
-                        using (Html.BeginForm("Create", "Comments", FormMethod.Post))
-                        {
-                            @Html.AntiForgeryToken()
-                            @Html.HiddenFor(model => model.Slug)
-                            @Html.Hidden("BlogPostId", Model.Id)
-                            <textarea class="container-fluid" name="CommentBody" placeholder="Add Comment..."></textarea>
-                            <button class="btn btn-default" type="submit">Comment</button>
-                        }
+                        @Html.AntiForgeryToken()
+                        @Html.HiddenFor(model => model.Slug)
+                        @Html.Hidden("BlogPostId", Model.Id)
+                        <textarea class="container-fluid" name="CommentBody" placeholder="Add Comment..."></textarea>
+                        <button class="btn btn-default" type="submit">Comment</button>
                     }
+                }
 
-                </div>
+            </div>
                 <hr />
                 <div class="form-group">
                     @if (User.IsInRole("Admin") && !Model.Published)
