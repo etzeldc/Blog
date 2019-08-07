@@ -31,7 +31,7 @@ namespace Blog.Controllers
             ViewBag.Search = searchStr;
             var blogList = IndexSearch(searchStr);
 
-            int pageSize = 3;
+            int pageSize = 5;
             int pageNumber = page ?? 1;
 
             //***This is the BlogPost index for the public to see, Unseen unless marked as published
@@ -47,7 +47,7 @@ namespace Blog.Controllers
             ViewBag.Search = searchStr;
             var adminList = IndexSearch(searchStr);
 
-            int pageSize = 3;
+            int pageSize = 5;
             int pageNumber = page ?? 1;
 
             return View(adminList.Where(b => b.Published).OrderByDescending(b => b.Created).ToPagedList(pageNumber, pageSize));
@@ -143,10 +143,8 @@ namespace Blog.Controllers
                     blogPost.MediaUrl = "/Uploads/" + fileName;
                 }
 
-                if (blogPost.Published == true)
-                {
-                    blogPost.Created = DateTimeOffset.Now;
-                }
+
+                blogPost.Created = DateTimeOffset.Now;
                 blogPost.Slug = slug;
                 db.BlogPosts.Add(blogPost);
                 db.SaveChanges();
@@ -211,10 +209,6 @@ namespace Blog.Controllers
                 }
                 #endregion
 
-                if (blogPost.Published)
-                {
-                blogPost.Created = DateTimeOffset.Now;
-                }
 
                 blogPost.Slug = newSlug;
                 blogPost.Updated = DateTimeOffset.Now;
